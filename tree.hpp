@@ -19,7 +19,7 @@ namespace tree {
 	class NotInTree {};
 
     /**
-        USE OF THIS CLASS IS ONLY PERMITTED WITH COMPARISON OPERATORS OVERLOADING.
+        USE OF THE "TREE" CLASS IS ONLY PERMITTED WITH COMPARISON OPERATORS OVERLOADING.
      **/
     
     template <class key, class value>
@@ -63,9 +63,10 @@ namespace tree {
         
     public:
         TREE<key,value>() : _root(NULL), _size(0){}
+        //TODO: create copy constructor and destructor.
         TREE<key,value>(TREE& tree) = default;  //Maybe later with SIYUR?
         ~TREE<key,value>() = default;           //Maybe later with SIYUR?
-        //TODO: NEEDS TO BE TESTED.
+        //TODO: get() NEEDS TO BE TESTED.
         value get(const key& k){
         	NODE<key,value>* temp = find(k);
         	if (!temp) {
@@ -97,6 +98,7 @@ namespace tree {
         	return false;
         }
 
+        //TODO: create remove().
         void remove(const key& k);
         int get_size() { return _size; }
         void set_root(NODE<key, value>* new_root) { _root = new_root; }

@@ -16,6 +16,8 @@ using std::cout;
 using std::endl;
 using namespace tree;
 
+//TODO: create a "tree-printing-function".
+
 //Checks creation of tree and node.
 //Checks set and get methods for node and tree.
 //Node methods should ONLY be used in tree.hpp.
