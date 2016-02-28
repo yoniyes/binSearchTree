@@ -13,15 +13,27 @@
 #include "node.hpp"
 
 namespace tree {
+
+	//Exceptions.
+	class EmptyTree {};
+	class NotInTree {};
+
+    /**
+        USE OF THIS CLASS IS ONLY PERMITTED WITH COMPARISON OPERATORS OVERLOADING.
+     **/
     
     template <class key, class value>
     class TREE {
+
+    	/*
+    	 * Fields.
+    	 */
         NODE<key, value>* _root;
         int _size;
-        
-        /**
-            USE OF THIS METHOD IS ONLY PERMITTED WITH <, > OVERLOADING.
-         **/
+
+        /*
+         * Find method.
+         */
         NODE<key, value>* find(const key& k){
         	NODE<key, value>* current = this->_root;
         	return this->find_aux(k, current);
@@ -34,18 +46,16 @@ namespace tree {
 
             //If key is smaller, go left. If key is bigger, go right.
             //Otherwise, return current node.
-            if (*(current->_key) > k) {
-                if (current->_left == NULL) {
+            if (current->get_key() > k) {
+                if (current->get_left() == NULL) {
                     return current;
                 }
-                return this->find_aux(k, current->_left);
-                //return current->_left->find_aux(k);
-            } else if (*(current->_key) < k) {
-                if (current->_right == NULL) {
+                return this->find_aux(k, current->get_left());
+            } else if (current->get_key() < k) {
+                if (current->get_right() == NULL) {
                     return current;
                 }
-                return this->find_aux(k, current->_right);
-                //return this->_right->find(k);
+                return this->find_aux(k, current->get_right());
             } else {
                 return current;
             }
@@ -55,8 +65,38 @@ namespace tree {
         TREE<key,value>() : _root(NULL), _size(0){}
         TREE<key,value>(TREE& tree) = default;  //Maybe later with SIYUR?
         ~TREE<key,value>() = default;           //Maybe later with SIYUR?
-        const value& get(const key& k);
-        bool insert(const key& k, const value& v);
+        //TODO: NEEDS TO BE TESTED.
+        value get(const key& k){
+        	NODE<key,value>* temp = find(k);
+        	if (!temp) {
+        		throw EmptyTree();
+        	} else if (temp->get_key() == k) {
+        		return temp->get_value();
+        	}
+        	throw NotInTree();
+        }
+
+        //insert() returns true if key already existed and false if it is a new key.
+        bool insert(const key& k, const value& v){
+        	if (!get_root()) {
+        		set_root(new NODE<key,value>(k,v));
+        		_size++;
+        		return false;
+        	}
+        	NODE<key,value>* temp = find(k);
+        	if (temp->get_key() == k){
+        		temp->set_pair(k,v);
+        		return true;
+        	}
+        	if (temp->get_key() > k) {
+        		temp->set_left(new NODE<key,value>(k,v));
+        	} else {
+        		temp->set_right(new NODE<key,value>(k,v));
+        	}
+        	_size++;
+        	return false;
+        }
+
         void remove(const key& k);
         int get_size() { return _size; }
         void set_root(NODE<key, value>* new_root) { _root = new_root; }
