@@ -23,8 +23,7 @@ namespace tree {
     public:
         NODE<key,value>(key k, value v, NODE* left = NULL, NODE* right = NULL) :
         	_key(new key(k)), _value(new value(v)), _left(left), _right(right){}
-        NODE<key,value>(NODE& node): _key(new key(node._key)), _value(new value(node._value)),
-        		_left(node._left), _right(node._right){}
+        NODE<key,value>(NODE& node) = delete;
         ~NODE<key,value>(){ delete _key; delete _value; }
         void set_left(NODE* left) { _left = left; }
         void set_right(NODE* right) { _right = right; }
