@@ -21,6 +21,7 @@ using namespace tree;
 //Checks creation of tree and node.
 //Checks set and get methods for node and tree.
 //Node methods should ONLY be used in tree.hpp.
+
 bool testNode(){
 	bool res = true;
 	TREE<int,string> tr;
@@ -75,6 +76,7 @@ bool testInsert1(){
 	TEST_EQUALS(res,tr.get_root()->get_key(), 10);
 	TEST_DIFFERENT(res,tr.get_root()->get_value(),"ten");
 	TEST_EQUALS(res,tr.get_root()->get_value(),"not ten");
+	tr.printTree();
 
 	return res;
 }

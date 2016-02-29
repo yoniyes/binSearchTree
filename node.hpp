@@ -11,6 +11,9 @@
 
 #include <stdio.h>
 
+using std::cout;
+using std::endl;
+
 namespace tree {
     
     template <class key, class value>

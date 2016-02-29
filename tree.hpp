@@ -31,6 +31,19 @@ namespace tree {
         NODE<key, value>* _root;
         int _size;
 
+        /**
+         * Print the tree.
+         */
+        class printNode {
+        public:
+        	void operator()(NODE<key,value>* node, int depth) {
+        		for (int i = 0; i < depth; i++) {
+        			cout << "	";
+       			}
+       			cout << node->get_key() << endl;
+       		}
+      	};
+
         /*
          * Find method.
          */
@@ -103,8 +116,35 @@ namespace tree {
         int get_size() { return _size; }
         void set_root(NODE<key, value>* new_root) { _root = new_root; }
         NODE<key, value>* get_root() { return _root; }
+
+
+        void printTree() {
+        	cout << endl;
+        	travel<printNode>();
+        }
+
+        template <class functor>
+        void travel() {
+        	NODE<key,value>* node = get_root();
+        	int depth = 0;
+        	travel_aux<functor>(node, depth);
+        }
+        /**
+         * In-order.
+         * Depth will be incremented to tell functor the level
+         * we're in the tree.
+         */
+        template <class functor>
+        void travel_aux(NODE<key,value>* node, int depth) {
+        	if (!node) {
+        		return;
+        	}
+        	depth++;
+        	travel_aux<functor>(node->get_left(), depth);
+        	functor()(node, depth);
+        	travel_aux<functor>(node->get_right(), depth);
+        }
     };
-    
 }
 
 
