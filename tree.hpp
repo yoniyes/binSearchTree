@@ -37,7 +37,7 @@ namespace tree {
         class printNode {
         public:
         	void operator()(NODE<key,value>* node, int depth) {
-        		for (int i = 0; i < depth; i++) {
+        		for (int i = 1; i < depth; i++) {
         			cout << "	";
        			}
        			cout << node->get_key() << endl;
@@ -56,7 +56,6 @@ namespace tree {
             if (current == NULL) {
                 return NULL;
             }
-
             //If key is smaller, go left. If key is bigger, go right.
             //Otherwise, return current node.
             if (current->get_key() > k) {
@@ -146,7 +145,6 @@ namespace tree {
         }
     };
 }
-
 
 
 #endif /* tree_hpp */

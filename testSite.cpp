@@ -105,6 +105,7 @@ bool testInsert2(){
 			tr.get_root()->get_left()->get_right()->get_left()->get_value(),"seven");
 
 	TEST_FALSE(res,tr.get_root()->get_right());
+	tr.printTree();
 
 	return res;
 }
