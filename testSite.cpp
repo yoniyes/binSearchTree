@@ -16,8 +16,6 @@ using std::cout;
 using std::endl;
 using namespace tree;
 
-//TODO: create a "tree-printing-function".
-
 //Checks creation of tree and node.
 //Checks set and get methods for node and tree.
 //Node methods should ONLY be used in tree.hpp.
@@ -40,13 +38,11 @@ bool testNode(){
 	node.set_right(&node_l);
 	TEST_EQUALS(res,&node_l,node.get_left());
 	TEST_EQUALS(res,&node_l,node.get_right());
-	//Test set_root for tree.
-	tr.set_root(&node);
-	TEST_EQUALS(res,&node,tr.get_root());
 	return res;
 }
 
 //Tests if insert() puts new (and already existing) keys and values in the right place.
+//Test copy constructor.
 bool testInsert1(){
 	bool res = true;
 	TREE<int,string> tr;
@@ -76,7 +72,11 @@ bool testInsert1(){
 	TEST_EQUALS(res,tr.get_root()->get_key(), 10);
 	TEST_DIFFERENT(res,tr.get_root()->get_value(),"ten");
 	TEST_EQUALS(res,tr.get_root()->get_value(),"not ten");
-	tr.printTree();
+	TREE<int,string> tr2(tr);
+	TEST_DIFFERENT(res,tr.get_root(),tr2.get_root());
+	TEST_EQUALS(res,tr.get_size(),tr2.get_size());
+	TEST_EQUALS(res,tr.get_root()->get_key(),tr2.get_root()->get_key());
+	TEST_EQUALS(res,tr.get_root()->get_value(),tr2.get_root()->get_value());
 
 	return res;
 }
@@ -103,9 +103,7 @@ bool testInsert2(){
 	TEST_EQUALS(res,tr.get_root()->get_left()->get_right()->get_left()->get_key(),7);
 	TEST_EQUALS(res,
 			tr.get_root()->get_left()->get_right()->get_left()->get_value(),"seven");
-
 	TEST_FALSE(res,tr.get_root()->get_right());
-	tr.printTree();
 
 	return res;
 }

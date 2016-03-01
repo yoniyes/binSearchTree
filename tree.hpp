@@ -51,7 +51,7 @@ namespace tree {
         	NODE<key, value>* current = this->_root;
         	return this->find_aux(k, current);
         }
-        NODE<key, value>* find_aux(const key& k, NODE<key, value>* current){
+        NODE<key, value>* find_aux(const key& k, NODE<key, value>* current) {
             //Check if ended a path.
             if (current == NULL) {
                 return NULL;
@@ -73,11 +73,40 @@ namespace tree {
             }
         };       //For get,insert,remove.
         
+        // For copy constructor.
+        NODE<key,value>* copy_tree(NODE<key,value>* node) {
+        	if (!node) {
+        		return NULL;
+        	}
+        	NODE<key,value>* copy = new NODE<key,value>(node->get_key(),
+        			node->get_value());
+        	NODE<key,value>* left_copy = copy_tree(node->get_left());
+        	NODE<key,value>* right_copy = copy_tree(node->get_right());
+        	copy->set_left(left_copy);
+        	copy->set_right(right_copy);
+        	return copy;
+        }
+
+        void delete_tree(NODE<key,value>* node) {
+        	if (!node) {
+        		return;
+        	}
+        	delete_tree(node->get_left());
+        	delete_tree(node->get_right());
+        	delete node;
+        }
+
     public:
-        TREE<key,value>() : _root(NULL), _size(0){}
-        //TODO: create copy constructor and destructor.
-        TREE<key,value>(TREE& tree) = default;  //Maybe later with SIYUR?
-        ~TREE<key,value>() = default;           //Maybe later with SIYUR?
+        TREE<key,value>() : _root(NULL), _size(0) {}
+        TREE<key,value>(TREE& tree) {
+        	// Using pre-order.
+        	_root = copy_tree(tree.get_root());
+        	_size = tree.get_size();
+        }
+        ~TREE<key,value>() {
+        	// Using post-order.
+        	delete_tree(get_root());
+        }
         //TODO: get() NEEDS TO BE TESTED.
         value get(const key& k){
         	NODE<key,value>* temp = find(k);
@@ -120,6 +149,7 @@ namespace tree {
         void printTree() {
         	cout << endl;
         	travel<printNode>();
+        	cout << endl;
         }
 
         template <class functor>
