@@ -108,9 +108,37 @@ bool testInsert2(){
 	return res;
 }
 
+bool testGet(){
+	bool res = true;
+	TREE<int,string> tr;
+	try {
+		TEST_EQUALS(res,"ten",tr.get(10));
+	} catch (EmptyTree& e) {
+//		cout << "CAUGHT! ";
+	}
+	tr.insert(10, "ten");
+	tr.insert(6,"six");
+	tr.insert(8,"eight");
+	tr.insert(7,"seven");
+	TEST_EQUALS(res,"ten",tr.get(10));
+	TEST_EQUALS(res,"six",tr.get(6));
+	TEST_EQUALS(res,"seven",tr.get(7));
+	TEST_EQUALS(res,"eight",tr.get(8));
+	tr.insert(11,"eleven");
+	TEST_EQUALS(res,"eleven",tr.get(11));
+	try {
+		TEST_EQUALS(res,"ten",tr.get(1));
+	} catch (NotInTree& e) {
+//		cout << "CAUGHT! ";
+	}
+
+	return res;
+}
+
 int main(){
 	RUN_TEST(testNode);
 	RUN_TEST(testInsert1);
 	RUN_TEST(testInsert2);
+	RUN_TEST(testGet);
 	return 0;
 }
