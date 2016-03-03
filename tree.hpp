@@ -182,6 +182,9 @@ namespace tree {
         	return copy;
         }
 
+        /**
+         * Helper for destructor.
+         */
         void delete_tree(NODE<key,value>* node) {
         	if (!node) {
         		return;
@@ -251,6 +254,7 @@ namespace tree {
         		if (!remove_leaf(to_remove,father)) {
         			remove_node(to_remove, father);
         		}
+        		return;
         		/*if (!to_remove->get_left() && !to_remove->get_right()) {
         			//If the tree contains only one node.
         			if (!father) {
