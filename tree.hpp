@@ -107,7 +107,6 @@ namespace tree {
         	// Using post-order.
         	delete_tree(get_root());
         }
-        //TODO: get() NEEDS TO BE TESTED.
         value get(const key& k){
         	NODE<key,value>* temp = find(k);
         	if (!temp) {
