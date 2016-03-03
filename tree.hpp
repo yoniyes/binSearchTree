@@ -14,18 +14,20 @@
 
 namespace tree {
 
-	//Exceptions.
+	/**
+	 * Exceptions.
+	 */
 	class EmptyTree {};
 	class NotInTree {};
 
     /**
-        USE OF THE "TREE" CLASS IS ONLY PERMITTED WITH COMPARISON OPERATORS OVERLOADING.
-     **/
+     * USE OF THE "TREE" CLASS IS ONLY PERMITTED WITH COMPARISON OPERATORS OVERLOADING.
+     */
     
     template <class key, class value>
     class TREE {
 
-    	/*
+    	/**
     	 * Fields.
     	 */
         NODE<key, value>* _root;
@@ -44,7 +46,7 @@ namespace tree {
        		}
       	};
 
-        /*
+        /**
          * Find method.
          */
         NODE<key, value>* find(const key& k){
@@ -71,9 +73,102 @@ namespace tree {
             } else {
                 return current;
             }
-        };       //For get,insert,remove.
+        };
         
-        // For copy constructor.
+        /**
+         * Helpers for remove()
+         */
+        NODE<key, value>* find_father(const key& k, NODE<key, value>* current) {
+                    //Check if ended a path.
+                    if (current == NULL) {
+                        return NULL;
+                    }
+                    //If key is smaller, go left. If key is bigger, go right.
+                    //Otherwise, return current node.
+                    if (current->get_key() > k) {
+                        if (current->get_left() == NULL) {
+                            throw NotInTree();
+                        } else if (current->get_left()->get_key() == k) {
+                        	return current;
+                        }
+                        return find_father(k, current->get_left());
+                    } else if (current->get_key() < k) {
+                        if (current->get_right() == NULL) {
+                            return current;
+                        } else if (current->get_right()->get_key() == k) {
+                        	return current;
+                        }
+                        return find_father(k, current->get_right());
+                    } else {
+                    	// If sent key is in root.
+                    	return NULL;
+                    }
+        };
+
+        bool remove_leaf(NODE<key,value>* to_remove, NODE<key,value>* father) {
+        	if (!to_remove->get_left() && !to_remove->get_right()) {
+        		//If the tree contains only one node.
+        		if (!father) {
+        			delete to_remove;
+        			set_root(NULL);
+        		} else {
+        			if (father->get_left() == to_remove) {
+        				father->set_left(NULL);
+        			} else {
+        				father->set_right(NULL);
+        			}
+        			delete to_remove;
+        		}
+        		_size--;
+        		return true;
+        	}
+        	return false;
+        }
+
+        void remove_node(NODE<key,value>* to_remove, NODE<key,value>* father) {
+        	// If has only one son.
+        	// Left.
+        	if (to_remove->get_left() && !to_remove->get_right()) {
+        		if (to_remove == get_root()) {
+        			set_root(to_remove->get_left());
+        		} else if (father->get_left() == to_remove) {
+        			father->set_left(to_remove->get_left());
+        		} else {
+        			father->set_right(to_remove->get_left());
+        		}
+        	//Right.
+        	} else if (!to_remove->get_left() && to_remove->get_right()) {
+        		if (to_remove == get_root()) {
+        			set_root(to_remove->get_right());
+        		} else if (father->get_left() == to_remove) {
+        			father->set_left(to_remove->get_right());
+        		} else {
+        			father->set_right(to_remove->get_right());
+        		}
+        	}
+        	// If has two sons.
+        	else {
+        		NODE<key,value>* temp = to_remove->get_right();
+        		while (temp->get_left()) {
+        			temp = temp->get_left();
+        		}
+        		to_remove->set_pair(temp->get_key(), temp->get_value());
+        		to_remove = temp;
+        		father = find_father(to_remove->get_key(), get_root());
+        		if (!father) {
+        			set_root(to_remove->get_right());
+        		} else {
+        			father->set_left(to_remove->get_right());
+        		}
+        	}
+        	delete to_remove;
+        	_size--;
+        	return;
+        }
+
+        /**
+         * Helper for copy constructor.
+         */
         NODE<key,value>* copy_tree(NODE<key,value>* node) {
         	if (!node) {
         		return NULL;
@@ -138,8 +233,83 @@ namespace tree {
         	return false;
         }
 
-        //TODO: create remove().
-        void remove(const key& k);
+        //TODO: test remove()
+        /**
+         * remove() workflow:
+         * 1. Find the node that needs to be removed.
+         * 2. If has no right/left son, let the father point accordingly instead.
+         * 		Otherwise, go one step RIGHT and then all the way to the LEFT.
+         * 		If has no sons (a leaf), skip step 3.
+         * 3. Swap the two nodes.
+         * 4. Remove the leaf which is now the node we wish to remove.
+         */
+        void remove(const key& k) {
+        	NODE<key,value>* to_remove = find(k);
+        	if (to_remove && to_remove->get_key() == k) {
+        		NODE<key,value>* father = find_father(k, get_root());
+        		// If it's a leaf.
+        		if (!remove_leaf(to_remove,father)) {
+        			remove_node(to_remove, father);
+        		}
+        		/*if (!to_remove->get_left() && !to_remove->get_right()) {
+        			//If the tree contains only one node.
+        			if (!father) {
+        				delete to_remove;
+        				set_root(NULL);
+        			} else {
+        				if (father->get_left() == to_remove) {
+        					father->set_left(NULL);
+        				} else {
+        					father->set_right(NULL);
+        				}
+        				delete to_remove;
+        			}
+        			_size--;
+        			return;
+        		}*/
+
+        		/*// If has only one son.
+        		// Left.
+        		if (to_remove->get_left() && !to_remove->get_right()) {
+        			if (to_remove == get_root()) {
+        				set_root(to_remove->get_left());
+        			} else if (father->get_left() == to_remove) {
+        				father->set_left(to_remove->get_left());
+        			} else {
+        				father->set_right(to_remove->get_left());
+        			}
+        		//Right.
+        		} else if (!to_remove->get_left() && to_remove->get_right()) {
+        			if (to_remove == get_root()) {
+        				set_root(to_remove->get_right());
+        			} else if (father->get_left() == to_remove) {
+        				father->set_left(to_remove->get_right());
+        			} else {
+        				father->set_right(to_remove->get_right());
+        			}
+        		}
+
+        		// If has two sons.
+        		else {
+        			NODE<key,value>* temp = to_remove->get_right();
+        			while (temp->get_left()) {
+        				temp = temp->get_left();
+        			}
+        			to_remove->set_pair(temp->get_key(), temp->get_value());
+        			to_remove = temp;
+        			father = find_father(to_remove->get_key(), get_root());
+        			if (!father) {
+        				set_root(to_remove->get_right());
+        			} else {
+        				father->set_left(to_remove->get_right());
+        			}
+        		}
+        		delete to_remove;
+        		_size--;
+        		return;*/
+        	}
+        	throw NotInTree();
+        }
         int get_size() { return _size; }
         void set_root(NODE<key, value>* new_root) { _root = new_root; }
         NODE<key, value>* get_root() { return _root; }
