@@ -135,7 +135,7 @@ bool testGet(){
 	return res;
 }
 
-/*bool testRemove() {
+bool testRemove() {
 	bool res = true;
 	TREE<int,string> tr;
 	tr.insert(10, "ten");
@@ -176,13 +176,13 @@ bool testGet(){
 	tr2.printTree();
 
 	return res;
-}*/
+}
 
 int main(){
 	RUN_TEST(testNode);
 	RUN_TEST(testInsert1);
 	RUN_TEST(testInsert2);
 	RUN_TEST(testGet);
-//	RUN_TEST(testRemove);
+	RUN_TEST(testRemove);
 	return 0;
 }

@@ -198,6 +198,8 @@ namespace tree {
         	delete node;
         }
 
+        void set_root(NODE<key, value>* new_root) { _root = new_root; }
+
     public:
         TREE<key,value>() : _root(NULL), _size(0) {}
         TREE<key,value>(TREE& tree) {
@@ -262,7 +264,6 @@ namespace tree {
         	throw NotInTree();
         }
         int get_size() { return _size; }
-        void set_root(NODE<key, value>* new_root) { _root = new_root; }
         NODE<key, value>* get_root() { return _root; }
 
 
