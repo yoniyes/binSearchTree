@@ -148,17 +148,21 @@ namespace tree {
         	}
         	// If has two sons.
         	else {
-        		NODE<key,value>* temp = to_remove->get_right();
-        		while (temp->get_left()) {
-        			temp = temp->get_left();
+        		NODE<key,value>* to_swap = to_remove->get_right();
+        		NODE<key,value> temp(to_remove->get_key(),to_remove->get_value());
+        		while (to_swap->get_left()) {
+        			to_swap = to_swap->get_left();
         		}
-        		to_remove->set_pair(temp->get_key(), temp->get_value());
-        		to_remove = temp;
-        		father = find_father(to_remove->get_key(), get_root());
+        		father = find_father(to_swap->get_key(), get_root());
+        		to_remove->set_pair(to_swap->get_key(), to_swap->get_value());
+        		to_swap->set_pair(temp.get_key(),temp.get_value());
+        		to_remove = to_swap;
         		if (!father) {
         			set_root(to_remove->get_right());
-        		} else {
+        		} else if (father->get_left() == to_remove) {
         			father->set_left(to_remove->get_right());
+        		} else {
+        			father->set_right(to_remove->get_right());
         		}
         	}
         	delete to_remove;
@@ -236,7 +240,6 @@ namespace tree {
         	return false;
         }
 
-        //TODO: test remove()
         /**
          * remove() workflow:
          * 1. Find the node that needs to be removed.
@@ -255,62 +258,6 @@ namespace tree {
         			remove_node(to_remove, father);
         		}
         		return;
-        		/*if (!to_remove->get_left() && !to_remove->get_right()) {
-        			//If the tree contains only one node.
-        			if (!father) {
-        				delete to_remove;
-        				set_root(NULL);
-        			} else {
-        				if (father->get_left() == to_remove) {
-        					father->set_left(NULL);
-        				} else {
-        					father->set_right(NULL);
-        				}
-        				delete to_remove;
-        			}
-        			_size--;
-        			return;
-        		}*/
-
-        		/*// If has only one son.
-        		// Left.
-        		if (to_remove->get_left() && !to_remove->get_right()) {
-        			if (to_remove == get_root()) {
-        				set_root(to_remove->get_left());
-        			} else if (father->get_left() == to_remove) {
-        				father->set_left(to_remove->get_left());
-        			} else {
-        				father->set_right(to_remove->get_left());
-        			}
-        		//Right.
-        		} else if (!to_remove->get_left() && to_remove->get_right()) {
-        			if (to_remove == get_root()) {
-        				set_root(to_remove->get_right());
-        			} else if (father->get_left() == to_remove) {
-        				father->set_left(to_remove->get_right());
-        			} else {
-        				father->set_right(to_remove->get_right());
-        			}
-        		}
-
-        		// If has two sons.
-        		else {
-        			NODE<key,value>* temp = to_remove->get_right();
-        			while (temp->get_left()) {
-        				temp = temp->get_left();
-        			}
-        			to_remove->set_pair(temp->get_key(), temp->get_value());
-        			to_remove = temp;
-        			father = find_father(to_remove->get_key(), get_root());
-        			if (!father) {
-        				set_root(to_remove->get_right());
-        			} else {
-        				father->set_left(to_remove->get_right());
-        			}
-        		}
-        		delete to_remove;
-        		_size--;
-        		return;*/
         	}
         	throw NotInTree();
         }

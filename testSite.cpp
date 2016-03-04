@@ -135,10 +135,54 @@ bool testGet(){
 	return res;
 }
 
+/*bool testRemove() {
+	bool res = true;
+	TREE<int,string> tr;
+	tr.insert(10, "ten");
+	tr.insert(6,"six");
+	tr.insert(8,"eight");
+	tr.insert(7,"seven");
+	tr.insert(5,"five");
+	tr.insert(20,"twenty");
+	tr.insert(15,"fifteen");
+	tr.insert(21,"twenty one");
+	tr.printTree();
+	tr.remove(10);
+	tr.printTree();
+
+	TREE<int,string> tr2;
+	tr2.insert(3,"three");
+	try {
+		tr2.remove(1);
+	} catch (NotInTree& e) {
+//		cout << "CAUGHT! ";
+	}
+	tr2.remove(3);
+	try {
+		tr2.remove(3);
+	} catch (NotInTree& e) {
+//		cout << "CAUGHT! ";
+	}
+	tr2.insert(1,"1");
+	tr2.insert(2,"2");
+	tr2.insert(3,"3");
+	tr2.insert(4,"4");
+	tr2.printTree();
+	tr2.remove(1);
+	tr2.printTree();
+	tr2.remove(2);
+	tr2.printTree();
+	tr2.remove(3);
+	tr2.printTree();
+
+	return res;
+}*/
+
 int main(){
 	RUN_TEST(testNode);
 	RUN_TEST(testInsert1);
 	RUN_TEST(testInsert2);
 	RUN_TEST(testGet);
+//	RUN_TEST(testRemove);
 	return 0;
 }
