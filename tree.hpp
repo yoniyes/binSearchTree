@@ -10,9 +10,12 @@
 #define tree_hpp
 
 #include <stdio.h>
+#include <list>
 #include "node.hpp"
 
 namespace tree {
+
+using std::list;
 
 	/**
 	 * Exceptions.
@@ -266,6 +269,8 @@ namespace tree {
         int get_size() { return _size; }
         NODE<key, value>* get_root() { return _root; }
 
+        //TODO: write export_inorder()
+        list<NODE<key,value>> export_inorder();
 
         void printTree() {
         	cout << endl;
