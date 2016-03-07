@@ -68,15 +68,8 @@ public:
 		}
 	}
 
-	// Insert to start of list.
-	void insert_first(const T& data) {
-		listNode<T> node(data);
-		node.set_next(_head->get_next());
-		_head->set_next(&node);
-		_size++;
-	}
 	// Insert to end of list.
-	void insert_last(const T& data) {
+	void insert(const T& data) {
 		listNode<T>* node = get_head();
 		while (node->get_next()) {
 			node = node->get_next();
@@ -92,17 +85,36 @@ public:
 		_size++;
 	}
 
-	//TODO: find(), sort().
-//	listNode<T>* find(T& data) {
-//		listNode<T>* node = get_head();
-//		while (node->get_next()) {
-//			node = node->get_next();
-//			if (node->get_data() == data) {
-//				return node;
-//			}
-//		}
-//		return NULL;
-//	}
+	// Assertion: each node has unique data (because the use of this list is
+	// for exporting a binSearchTree to it using <key,value> pairs which are
+	// unique in a dictionary).
+	listNode<T>* find(T& data) {
+		listNode<T>* node = get_head();
+		while (node->get_next()) {
+			node = node->get_next();
+			if (node->get_data() == data) {
+				return node;
+			}
+		}
+		return NULL;
+	}
+	template <class COMPARATOR>
+	void sort(const COMPARATOR& compare) {
+		if (get_size() <= 1) {
+			return;
+		}
+		for (int i = 0; i < get_size(); i++) {
+			for (listNode<T>* curr = get_head(); curr->get_next();
+					curr = curr->get_next()) {
+				listNode<T>* next = curr->get_next();
+				if (!compare(curr->get_data(), next->get_data())) {
+					T temp = curr->get_data();
+					curr->set_data(next->get_data());
+					next->set_data(temp);
+				}
+			}
+		}
+	}
 	void remove(listNode<T>* node) {
 		if (!node) {
 			return;
