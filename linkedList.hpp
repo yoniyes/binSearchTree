@@ -18,7 +18,7 @@ class listNode {
 
 public:
 	listNode<T>() : _data(new T), _next(NULL) {}
-	listNode<T>(T& data) : _data(new T(data)), _next(NULL) {}
+	listNode<T>(const T& data) : _data(new T(data)), _next(NULL) {}
 	~listNode<T>() { delete _data; }
 	listNode<T>(listNode<T>& node) : _data(new T(node.get_data())), _next(NULL) {}
 	listNode<T>& operator=(const listNode<T>&) = delete;
@@ -74,7 +74,7 @@ public:
 		while (node->get_next()) {
 			node = node->get_next();
 		}
-		node->set_next(listNode<T>(data));
+		node->set_next(new listNode<T>(data));
 		_size++;
 	}
 	// Insert after a node.
@@ -88,7 +88,7 @@ public:
 	// Assertion: each node has unique data (because the use of this list is
 	// for exporting a binSearchTree to it using <key,value> pairs which are
 	// unique in a dictionary).
-	listNode<T>* find(T& data) {
+	listNode<T>* find(const T& data) {
 		listNode<T>* node = get_head();
 		while (node->get_next()) {
 			node = node->get_next();
@@ -98,13 +98,15 @@ public:
 		}
 		return NULL;
 	}
+
+	//TODO: make it merge-sort and NOT bubble-sort.
 	template <class COMPARATOR>
 	void sort(const COMPARATOR& compare) {
 		if (get_size() <= 1) {
 			return;
 		}
 		for (int i = 0; i < get_size(); i++) {
-			for (listNode<T>* curr = get_head(); curr->get_next();
+			for (listNode<T>* curr = get_first(); curr->get_next();
 					curr = curr->get_next()) {
 				listNode<T>* next = curr->get_next();
 				if (!compare(curr->get_data(), next->get_data())) {
@@ -125,10 +127,21 @@ public:
 		}
 		current->set_next(node->get_next());
 		delete node;
+		_size--;
 	}
 	listNode<T>* get_head() { return _head; }
 	listNode<T>* get_first() { return _head->get_next(); }
 	int get_size() { return _size; }
+
+	void printList() {
+		listNode<T>* node = get_first();
+		cout << endl;
+		while (node) {
+			cout << node->get_data() << "	";
+			node = node->get_next();
+		}
+		cout << endl;
+	}
 };
 
 
