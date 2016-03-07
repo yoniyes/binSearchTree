@@ -42,13 +42,30 @@ class linkedList {
 	listNode<T>* _head;
 	int _size;
 
+	listNode<T>* copy_node(listNode<T>* node) {
+		if (!node) {
+			return NULL;
+		}
+		listNode<T>* one = new listNode<T>(node->get_data());
+		listNode<T>* two = copy_node(node->get_next());
+		one->set_next(two);
+		return one;
+	}
+
 public:
 	linkedList<T>() : _head(new listNode<T>()), _size(0) {}
-	linkedList<T>(linkedList& list) : _head(NULL), _size(0) {
-		//TODO: write list copy constructor.
+	linkedList<T>(linkedList& list) : _head(new listNode<T>()),
+			_size(list.get_size()) {
+		listNode<T>* node = list.get_first();
+		_head->set_next(copy_node(node));
 	}
 	~linkedList() {
-		//TODO: write list destructor.
+		listNode<T>* current = get_head();
+		while (current) {
+			listNode<T>* to_remove = current;
+			current = current->get_next();
+			delete to_remove;
+		}
 	}
 
 	// Insert to start of list.
@@ -74,18 +91,28 @@ public:
 		node->set_next(to_insert);
 		_size++;
 	}
-	listNode<T>* find(T& data) {
-		listNode<T>* node = get_head();
-		while (node->get_next()) {
-			node = node->get_next();
-			if (node->get_data() == data) {
-				return node;
-			}
+
+	//TODO: find(), sort().
+//	listNode<T>* find(T& data) {
+//		listNode<T>* node = get_head();
+//		while (node->get_next()) {
+//			node = node->get_next();
+//			if (node->get_data() == data) {
+//				return node;
+//			}
+//		}
+//		return NULL;
+//	}
+	void remove(listNode<T>* node) {
+		if (!node) {
+			return;
 		}
-		return NULL;
-	}
-	void remove(listNode<T>& node) {
-		//TODO: write remove().
+		listNode<T>* current = get_head();
+		while (current->get_next() != node) {
+			current = current->get_next();
+		}
+		current->set_next(node->get_next());
+		delete node;
 	}
 	listNode<T>* get_head() { return _head; }
 	listNode<T>* get_first() { return _head->get_next(); }
