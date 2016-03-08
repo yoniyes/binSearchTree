@@ -9,6 +9,7 @@
 #include <iostream>
 #include "tree.hpp"
 #include "node.hpp"
+#include "linkedList.hpp"
 #include "testsMacros.h"
 
 using std::string;
@@ -178,11 +179,65 @@ bool testRemove() {
 	return res;
 }
 
+class compareInt {
+public:
+	bool operator()(const int first, const int second) const {
+		return first <= second;
+	}
+};
+
+bool testList() {
+	bool res = true;
+	//Test creation.
+	linkedList<int> l;
+	TEST_EQUALS(res, l.get_size(), 0);
+	TEST_EQUALS(res,l.get_first(), NULL);
+	//Test insertion.
+	l.insert(10);
+	TEST_EQUALS(res, l.get_size(), 1);
+	l.insert(9);
+	TEST_EQUALS(res, l.get_size(), 2);
+	l.insert(11);
+	TEST_EQUALS(res, l.get_size(), 3);
+	l.insert(-23);
+	TEST_EQUALS(res, l.get_size(), 4);
+	l.insert_after(l.get_head(), -1);
+	TEST_EQUALS(res, l.get_size(), 5);
+	listNode<int>* ptr = l.find(1);
+	TEST_EQUALS(res, ptr, NULL);
+	ptr = l.find(9);
+	TEST_DIFFERENT(res, ptr, NULL);
+	TEST_EQUALS(res, ptr->get_next()->get_data(), 11);
+	l.printList();
+	ptr->set_data(7);
+	l.printList();
+	l.insert_after(ptr, 30);
+	TEST_EQUALS(res, l.get_size(), 6);
+	l.printList();
+	ptr = l.find(-23);
+	l.insert_after(ptr, 12);
+	TEST_EQUALS(res, l.get_size(), 7);
+	l.printList();
+	l.remove(l.find(7));
+	TEST_EQUALS(res, l.get_size(), 6);
+	l.printList();
+	l.remove(l.find(1));
+	TEST_EQUALS(res, l.get_size(), 6);
+	l.printList();
+	linkedList<int> l2(l);
+	TEST_EQUALS(res, l2.get_size(), 6);
+	l2.printList();
+	l2.sort(compareInt());
+	l2.printList();
+	return res;
+}
+
 int main(){
-	RUN_TEST(testNode);
-	RUN_TEST(testInsert1);
-	RUN_TEST(testInsert2);
-	RUN_TEST(testGet);
-	RUN_TEST(testRemove);
+//	RUN_TEST(testNode);
+//	RUN_TEST(testInsert1);
+//	RUN_TEST(testInsert2);
+//	RUN_TEST(testGet);
+//	RUN_TEST(testRemove);
+	RUN_TEST(testList);
 	return 0;
 }
