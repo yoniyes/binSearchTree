@@ -10,6 +10,9 @@
 
 #include <cstdlib>
 
+using std::cout;
+using std::endl;
+
 template <class T>
 class listNode {
 
