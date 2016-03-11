@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <utility>
 #include "tree.hpp"
 #include "node.hpp"
 #include "linkedList.hpp"
@@ -15,6 +16,7 @@
 using std::string;
 using std::cout;
 using std::endl;
+using std::pair;
 using namespace tree;
 
 //Checks creation of tree and node.
@@ -147,9 +149,9 @@ bool testRemove() {
 	tr.insert(20,"twenty");
 	tr.insert(15,"fifteen");
 	tr.insert(21,"twenty one");
-	tr.printTree();
+//	tr.printTree();
 	tr.remove(10);
-	tr.printTree();
+//	tr.printTree();
 
 	TREE<int,string> tr2;
 	tr2.insert(3,"three");
@@ -168,13 +170,13 @@ bool testRemove() {
 	tr2.insert(2,"2");
 	tr2.insert(3,"3");
 	tr2.insert(4,"4");
-	tr2.printTree();
+//	tr2.printTree();
 	tr2.remove(1);
-	tr2.printTree();
+//	tr2.printTree();
 	tr2.remove(2);
-	tr2.printTree();
+//	tr2.printTree();
 	tr2.remove(3);
-	tr2.printTree();
+//	tr2.printTree();
 
 	return res;
 }
@@ -208,36 +210,65 @@ bool testList() {
 	ptr = l.find(9);
 	TEST_DIFFERENT(res, ptr, NULL);
 	TEST_EQUALS(res, ptr->get_next()->get_data(), 11);
-	l.printList();
+//	l.printList();
 	ptr->set_data(7);
-	l.printList();
+//	l.printList();
 	l.insert_after(ptr, 30);
 	TEST_EQUALS(res, l.get_size(), 6);
-	l.printList();
+//	l.printList();
 	ptr = l.find(-23);
 	l.insert_after(ptr, 12);
 	TEST_EQUALS(res, l.get_size(), 7);
-	l.printList();
+//	l.printList();
 	l.remove(l.find(7));
 	TEST_EQUALS(res, l.get_size(), 6);
-	l.printList();
+//	l.printList();
 	l.remove(l.find(1));
 	TEST_EQUALS(res, l.get_size(), 6);
-	l.printList();
+//	l.printList();
 	linkedList<int> l2(l);
 	TEST_EQUALS(res, l2.get_size(), 6);
-	l2.printList();
+//	l2.printList();
 	l2.sort(compareInt());
-	l2.printList();
+//	l2.printList();
+	return res;
+}
+
+void printPairs(listNode<pair<int,string>>* node) {
+	cout << endl;
+	for (listNode<pair<int,string>>* curr = node; curr; curr = curr->get_next()) {
+		cout << curr->get_data().first << "	";
+	}
+	cout << endl;
+}
+
+bool testExport() {
+	bool res = true;
+	TREE<int,string> tr;
+	tr.insert(10, "ten");
+	tr.insert(6,"six");
+	tr.insert(8,"eight");
+	tr.insert(7,"seven");
+	tr.insert(5,"five");
+	tr.insert(20,"twenty");
+	tr.insert(15,"fifteen");
+	tr.insert(21,"twenty one");
+//	tr.printTree();
+	linkedList<pair<int,string>>* l = tr.export_inorder();
+	TEST_EQUALS(res,l->get_size(),8);
+	TEST_EQUALS(res,l->get_first()->get_data().first,5);
+	TEST_EQUALS(res,l->get_first()->get_data().second,"five");
+//	printPairs(l->get_first());
 	return res;
 }
 
 int main(){
-//	RUN_TEST(testNode);
-//	RUN_TEST(testInsert1);
-//	RUN_TEST(testInsert2);
-//	RUN_TEST(testGet);
-//	RUN_TEST(testRemove);
+	RUN_TEST(testNode);
+	RUN_TEST(testInsert1);
+	RUN_TEST(testInsert2);
+	RUN_TEST(testGet);
+	RUN_TEST(testRemove);
 	RUN_TEST(testList);
+	RUN_TEST(testExport);
 	return 0;
 }

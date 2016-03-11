@@ -10,12 +10,12 @@
 #define tree_hpp
 
 #include <stdio.h>
-#include <list>
+#include "linkedList.hpp"
 #include "node.hpp"
 
 namespace tree {
 
-using std::list;
+using std::pair;
 
 	/**
 	 * Exceptions.
@@ -48,6 +48,17 @@ using std::list;
        			cout << node->get_key() << endl;
        		}
       	};
+
+        /**
+         * Insert to list.
+         */
+        class insertToList {
+        public:
+        	void operator()(linkedList<pair<key,value>>* list, NODE<key,value>* node) {
+        		pair<key,value> data(node->get_key(),node->get_value());
+        		list->insert(data);
+        	}
+        };
 
         /**
          * Find method.
@@ -269,9 +280,6 @@ using std::list;
         int get_size() { return _size; }
         NODE<key, value>* get_root() { return _root; }
 
-        //TODO: write export_inorder()
-        list<NODE<key,value>> export_inorder();
-
         void printTree() {
         	cout << endl;
         	travel<printNode>();
@@ -298,6 +306,30 @@ using std::list;
         	travel_aux<functor>(node->get_left(), depth);
         	functor()(node, depth);
         	travel_aux<functor>(node->get_right(), depth);
+        }
+
+
+        //TODO: write export_inorder()
+        linkedList<pair<key,value>>* export_inorder() {
+        	linkedList<pair<key,value>>* l = new linkedList<pair<key,value>>();
+        	in_order<insertToList>(l);
+        	return l;
+        }
+
+        template <class functor>
+        void in_order(linkedList<pair<key,value>>* l) {
+        	NODE<key,value>* node = get_root();
+        	in_order_aux<functor>(l, node);
+        }
+
+        template <class functor>
+        void in_order_aux(linkedList<pair<key,value>>* l, NODE<key,value>* node) {
+        	if (!node) {
+        		return;
+        	}
+        	in_order_aux<functor>(l, node->get_left());
+        	functor()(l, node);
+        	in_order_aux<functor>(l, node->get_right());
         }
     };
 }

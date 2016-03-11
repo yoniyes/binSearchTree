@@ -1,10 +1,10 @@
-testSite.d: ../testSite.cpp ../tree.hpp ../node.hpp ../linkedList.hpp \
+testSite.d: ../testSite.cpp ../tree.hpp ../linkedList.hpp ../node.hpp \
   ../testsMacros.h
 
 ../tree.hpp:
 
-../node.hpp:
-
 ../linkedList.hpp:
+
+../node.hpp:
 
 ../testsMacros.h:
