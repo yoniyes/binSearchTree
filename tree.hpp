@@ -13,6 +13,9 @@
 #include "linkedList.hpp"
 #include "node.hpp"
 
+//TODO: import_from_list().
+//TODO: create an algorithm for changing the exported tree in O(n).
+
 namespace tree {
 
 using std::pair;
@@ -308,8 +311,6 @@ using std::pair;
         	travel_aux<functor>(node->get_right(), depth);
         }
 
-
-        //TODO: write export_inorder()
         linkedList<pair<key,value>>* export_inorder() {
         	linkedList<pair<key,value>>* l = new linkedList<pair<key,value>>();
         	in_order<insertToList>(l);
