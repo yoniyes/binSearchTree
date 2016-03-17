@@ -6,7 +6,7 @@ The final goal is to build a working binary search tree for implementing a dicti
 For any non-standard variable types:<br/>
 <b>USE OF THE "TREE" CLASS IS ONLY PERMITTED WITH COMPARISON OPERATORS OVERLOADING.</b>
 
-- Provided with a basic linkedList class. -
+- Provided with a basic linkedList class.
 
 <h3>The interface for binSearchTree:</h3>
 <ul>
