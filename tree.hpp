@@ -13,9 +13,6 @@
 #include "linkedList.hpp"
 #include "node.hpp"
 
-//TODO: import_from_list().
-//TODO: create an algorithm for changing the exported tree in O(n).
-
 namespace tree {
 
 using std::pair;
@@ -95,6 +92,10 @@ using std::pair;
         /**
          * Helpers for remove()
          */
+
+        /**
+         * This might be useless now that we have _father field.
+         */
         NODE<key, value>* find_father(const key& k, NODE<key, value>* current) {
                     //Check if ended a path.
                     if (current == NULL) {
@@ -148,19 +149,45 @@ using std::pair;
         	if (to_remove->get_left() && !to_remove->get_right()) {
         		if (to_remove == get_root()) {
         			set_root(to_remove->get_left());
+
+        			get_root()->set_father(NULL);
+
         		} else if (father->get_left() == to_remove) {
         			father->set_left(to_remove->get_left());
+
+        			if (father->get_left()) {
+        				father->get_left()->set_father(father);
+        			}
+
         		} else {
         			father->set_right(to_remove->get_left());
+
+        			if (father->get_right()) {
+        				father->get_right()->set_father(father);
+        			}
+
         		}
         	//Right.
         	} else if (!to_remove->get_left() && to_remove->get_right()) {
         		if (to_remove == get_root()) {
         			set_root(to_remove->get_right());
+
+        			get_root()->set_father(NULL);
+
         		} else if (father->get_left() == to_remove) {
         			father->set_left(to_remove->get_right());
+
+        			if (father->get_left()) {
+        				father->get_left()->set_father(father);
+        			}
+
         		} else {
         			father->set_right(to_remove->get_right());
+
+        			if (father->get_right()) {
+        				father->get_right()->set_father(father);
+        			}
+
         		}
         	}
         	// If has two sons.
@@ -170,16 +197,32 @@ using std::pair;
         		while (to_swap->get_left()) {
         			to_swap = to_swap->get_left();
         		}
-        		father = find_father(to_swap->get_key(), get_root());
+
+//        		father = find_father(to_swap->get_key(), get_root());
+        		father = to_swap->get_father();
+
         		to_remove->set_pair(to_swap->get_key(), to_swap->get_value());
         		to_swap->set_pair(temp.get_key(),temp.get_value());
         		to_remove = to_swap;
         		if (!father) {
         			set_root(to_remove->get_right());
+
+        			get_root()->set_father(NULL);
+
         		} else if (father->get_left() == to_remove) {
         			father->set_left(to_remove->get_right());
+
+        			if (father->get_left()) {
+        				father->get_left()->set_father(father);
+        			}
+
         		} else {
         			father->set_right(to_remove->get_right());
+
+        			if (father->get_right()) {
+        				father->get_right()->set_father(father);
+        			}
+
         		}
         	}
         	delete to_remove;
@@ -200,6 +243,14 @@ using std::pair;
         	NODE<key,value>* right_copy = copy_tree(node->get_right());
         	copy->set_left(left_copy);
         	copy->set_right(right_copy);
+
+        	if (copy->get_left()) {
+        		copy->get_left()->set_father(copy);
+        	}
+        	if (copy->get_right()) {
+            	copy->get_right()->set_father(copy);
+        	}
+
         	return copy;
         }
 
@@ -240,20 +291,30 @@ using std::pair;
 
         //insert() returns true if key already existed and false if it is a new key.
         bool insert(const key& k, const value& v){
+        	// If the tree is empty.
         	if (!get_root()) {
         		set_root(new NODE<key,value>(k,v));
         		_size++;
         		return false;
         	}
+        	// If the tree is not empty.
         	NODE<key,value>* temp = find(k);
+        	// If the key exists, overwrite.
         	if (temp->get_key() == k){
         		temp->set_pair(k,v);
         		return true;
         	}
+        	// If it's new, add it.
         	if (temp->get_key() > k) {
         		temp->set_left(new NODE<key,value>(k,v));
+
+        		temp->get_left()->set_father(temp);
+
         	} else {
         		temp->set_right(new NODE<key,value>(k,v));
+
+        		temp->get_right()->set_father(temp);
+
         	}
         	_size++;
         	return false;
@@ -262,7 +323,7 @@ using std::pair;
         /**
          * remove() workflow:
          * 1. Find the node that needs to be removed.
-         * 2. If has no right/left son, let the father point accordingly instead.
+         * 2. If it has no right/left son, let the father point accordingly instead.
          * 		Otherwise, go one step RIGHT and then all the way to the LEFT.
          * 		If has no sons (a leaf), skip step 3.
          * 3. Swap the two nodes.
@@ -271,7 +332,10 @@ using std::pair;
         void remove(const key& k) {
         	NODE<key,value>* to_remove = find(k);
         	if (to_remove && to_remove->get_key() == k) {
-        		NODE<key,value>* father = find_father(k, get_root());
+//        		NODE<key,value>* father = find_father(k, get_root());
+
+        		NODE<key,value>* father = to_remove->get_father();
+
         		// If it's a leaf.
         		if (!remove_leaf(to_remove,father)) {
         			remove_node(to_remove, father);

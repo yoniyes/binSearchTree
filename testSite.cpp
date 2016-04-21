@@ -117,7 +117,7 @@ bool testGet(){
 	try {
 		TEST_EQUALS(res,"ten",tr.get(10));
 	} catch (EmptyTree& e) {
-//		cout << "CAUGHT! ";
+		cout << "CAUGHT! ";
 	}
 	tr.insert(10, "ten");
 	tr.insert(6,"six");
@@ -132,7 +132,7 @@ bool testGet(){
 	try {
 		TEST_EQUALS(res,"ten",tr.get(1));
 	} catch (NotInTree& e) {
-//		cout << "CAUGHT! ";
+		cout << "CAUGHT! ";
 	}
 
 	return res;
@@ -149,34 +149,34 @@ bool testRemove() {
 	tr.insert(20,"twenty");
 	tr.insert(15,"fifteen");
 	tr.insert(21,"twenty one");
-//	tr.printTree();
+	tr.printTree();
 	tr.remove(10);
-//	tr.printTree();
+	tr.printTree();
 
 	TREE<int,string> tr2;
 	tr2.insert(3,"three");
 	try {
 		tr2.remove(1);
 	} catch (NotInTree& e) {
-//		cout << "CAUGHT! ";
+		cout << "CAUGHT! ";
 	}
 	tr2.remove(3);
 	try {
 		tr2.remove(3);
 	} catch (NotInTree& e) {
-//		cout << "CAUGHT! ";
+		cout << "CAUGHT! ";
 	}
 	tr2.insert(1,"1");
 	tr2.insert(2,"2");
 	tr2.insert(3,"3");
 	tr2.insert(4,"4");
-//	tr2.printTree();
+	tr2.printTree();
 	tr2.remove(1);
-//	tr2.printTree();
+	tr2.printTree();
 	tr2.remove(2);
-//	tr2.printTree();
+	tr2.printTree();
 	tr2.remove(3);
-//	tr2.printTree();
+	tr2.printTree();
 
 	return res;
 }
@@ -210,27 +210,27 @@ bool testList() {
 	ptr = l.find(9);
 	TEST_DIFFERENT(res, ptr, NULL);
 	TEST_EQUALS(res, ptr->get_next()->get_data(), 11);
-//	l.printList();
+	l.printList();
 	ptr->set_data(7);
-//	l.printList();
+	l.printList();
 	l.insert_after(ptr, 30);
 	TEST_EQUALS(res, l.get_size(), 6);
-//	l.printList();
+	l.printList();
 	ptr = l.find(-23);
 	l.insert_after(ptr, 12);
 	TEST_EQUALS(res, l.get_size(), 7);
-//	l.printList();
+	l.printList();
 	l.remove(l.find(7));
 	TEST_EQUALS(res, l.get_size(), 6);
-//	l.printList();
+	l.printList();
 	l.remove(l.find(1));
 	TEST_EQUALS(res, l.get_size(), 6);
-//	l.printList();
+	l.printList();
 	linkedList<int> l2(l);
 	TEST_EQUALS(res, l2.get_size(), 6);
-//	l2.printList();
+	l2.printList();
 	l2.sort(compareInt());
-//	l2.printList();
+	l2.printList();
 	return res;
 }
 
@@ -253,12 +253,12 @@ bool testExport() {
 	tr.insert(20,"twenty");
 	tr.insert(15,"fifteen");
 	tr.insert(21,"twenty one");
-//	tr.printTree();
+	tr.printTree();
 	linkedList<pair<int,string>>* l = tr.export_inorder();
 	TEST_EQUALS(res,l->get_size(),8);
 	TEST_EQUALS(res,l->get_first()->get_data().first,5);
 	TEST_EQUALS(res,l->get_first()->get_data().second,"five");
-//	printPairs(l->get_first());
+	printPairs(l->get_first());
 	return res;
 }
 
