@@ -1,3 +1,5 @@
+# NOT MAINTAINED ANYMORE AND NOT UPDATED.
+
 # binSearchTree
 
 An ongoing eclipse project written in C++.
